@@ -14,67 +14,44 @@
  * limitations under the License.
  */
 
+
 plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
-
-    // Apply the application plugin to add support for building a CLI application.
-    id 'application'
-
-    id 'distribution'
+    id 'java' // or 'application' if you have a main class
 }
 
-compileJava   {
-    sourceCompatibility = '12'
-    targetCompatibility = '12'
-}
+group 'eventgen'
+version '1.0-SNAPSHOT'
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral() // Or other repositories like jcenter() or your own
 }
 
-application {
-    mainClassName = 'stroom.datageneratator.EventGen'
+dependencies {
+    implementation 'com.google.guava:guava:28.0-jre'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.2'
+    implementation 'org.apache.velocity:velocity-engine-core:2.2'
+    implementation 'org.apache.velocity.tools:velocity-tools-generic:3.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.2'
+    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+
+    // testImplementation 'junit:junit:4.12'
 }
 
+test {
+    useJUnitPlatform()
+}
 
-jar {
-    archiveBaseName ='eventgen'
+task fatJar(type: Jar) {
+    archiveBaseName.set('eventgen') // e.g., my-app-all.jar
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes "Main-Class": "stroom.datagenerator.EventGen"
     }
 
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    onlyIf {
-        true
-    }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
-
-distributions {
-    eventgen {
-        distributionBaseName = 'eventgen'
-        contents {
-            from 'src/eventgen'
-        }
-    }
-}
-
-dependencies {
-    compile 'com.google.guava:guava:28.0-jre'
-    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.2'
-    compile 'org.apache.velocity:velocity-engine-core:2.2'
-    compile 'org.apache.velocity.tools:velocity-tools-generic:3.0'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.2'
-    compile 'commons-cli:commons-cli:1.4'
-    compile 'org.slf4j:slf4j-api:1.7.30'
-    compile 'org.slf4j:slf4j-simple:1.7.30'
-    compile 'com.github.javafaker:javafaker:1.0.2'
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
-}
-
-

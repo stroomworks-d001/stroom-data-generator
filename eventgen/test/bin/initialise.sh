@@ -53,15 +53,15 @@ echo
 mkdir -p "$OUTPUT_DIR"
 
 echo "Creating reference data required for repeatable tests"
-java -Xmx40M -jar bin/eventgen.jar config/reference/hosts.yml -p 2019-12-01T00:00:00.000Z -r P31D -h $HOST_COUNT -u $USER_COUNT
-java -Xmx40M -jar bin/eventgen.jar config/reference/example.yml -p 2019-12-01T00:00:00.000Z -r P31D -h $HOST_COUNT -u $USER_COUNT
+java -Xmx40M -jar bin/eventgen.jar config/reference/hosts.yml -p 2025-05-01T00:00:00.000Z -r P31D -h $HOST_COUNT -u $USER_COUNT
+java -Xmx40M -jar bin/eventgen.jar config/reference/example.yml -p 2025-05-01T00:00:00.000Z -r P31D -h $HOST_COUNT -u $USER_COUNT
 
 echo "Sending that data to Stroom"
 bin/sendAllZipsToStroom "$OUTPUT_DIR"
 
 echo "Generating event data for repeatable tests"
 
-java -Xmx40M -jar bin/eventgen.jar config/events/example.yml -p 2019-12-01T00:00:00.000Z -r P31D -h $HOST_COUNT -u $USER_COUNT
+java -Xmx40M -jar bin/eventgen.jar config/events/example.yml -p 2025-05-01T00:00:00.000Z -r P31D -h $HOST_COUNT -u $USER_COUNT
 sleep 300
 bin/sendAllZipsToStroom "$OUTPUT_DIR"
 
